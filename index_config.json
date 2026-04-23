@@ -1,0 +1,284 @@
+{
+  "standalone": {
+    "lib": "WYLD",
+    "label": "All WYLD Policies"
+  },
+  "columns": [
+    {
+      "id": "public",
+      "label": "Public Libraries",
+      "groups": [
+        {
+          "label": "Albany County",
+          "members": [
+            {"lib": "ALBY",      "label": "Albany County Library"},
+            {"lib": "ALBY-CENT", "label": "Centennial Branch Library"},
+            {"lib": "ALBY-ROCK", "label": "Rock River Branch Library"},
+            {"lib": "ALBY-BKMBL","label": "Bookmobile"}
+          ]
+        },
+        {
+          "label": "Big Horn County",
+          "members": [
+            {"lib": "BHN",      "label": "Basin Library"},
+            {"lib": "BHN-LOVL", "label": "Lovell Branch Library"},
+            {"lib": "BHN-GREY", "label": "Greybull Branch Library"}
+          ]
+        },
+        {
+          "label": "Campbell County",
+          "members": [
+            {"lib": "CAMP",      "label": "Campbell County Library"},
+            {"lib": "CAMP-WRIG", "label": "Wright Branch Library"}
+          ]
+        },
+        {
+          "label": "Carbon County",
+          "members": [
+            {"lib": "CARB",       "label": "Carbon County Library, Rawlins"},
+            {"lib": "CARB-ELKMT", "label": "Elk Mountain Branch Library"},
+            {"lib": "CARB-ENC",   "label": "Encampment Branch Library"},
+            {"lib": "CARB-HANNA", "label": "Hanna Branch Library"},
+            {"lib": "CARB-LSRIV", "label": "Little Snake River Branch Library"},
+            {"lib": "CARB-MBOW",  "label": "Medicine Bow Branch Library"},
+            {"lib": "CARB-SART",  "label": "Saratoga Branch Library"}
+          ]
+        },
+        {
+          "label": "Converse County",
+          "members": [
+            {"lib": "CONV",      "label": "Converse County Library"},
+            {"lib": "CONV-GLEN", "label": "Glenrock Branch Library"}
+          ]
+        },
+        {
+          "label": "Crook County",
+          "members": [
+            {"lib": "CRK",      "label": "Crook County Library"},
+            {"lib": "CRK-HULE", "label": "Hulett Branch Library"},
+            {"lib": "CRK-MOOR", "label": "Moorcroft Branch Library"}
+          ]
+        },
+        {
+          "label": "Fremont County",
+          "members": [
+            {"lib": "FREM",      "label": "Fremont County Library, Lander"},
+            {"lib": "FREM-DUBO", "label": "Dubois Branch Library"},
+            {"lib": "FREM-RIVT", "label": "Riverton Branch Library"}
+          ]
+        },
+        {
+          "label": "Goshen County",
+          "members": [
+            {"lib": "GOSH", "label": "Goshen County Library"}
+          ]
+        },
+        {
+          "label": "Hot Springs County",
+          "members": [
+            {"lib": "HSPG", "label": "Hot Springs County Library"}
+          ]
+        },
+        {
+          "label": "Johnson County",
+          "members": [
+            {"lib": "JOHN",      "label": "Johnson County Library"},
+            {"lib": "JOHN-KAYC", "label": "Kaycee Branch Library"}
+          ]
+        },
+        {
+          "label": "Laramie County",
+          "members": [
+            {"lib": "LARM",       "label": "Laramie County Library"},
+            {"lib": "LARM-BURN",  "label": "Burns Branch Library"},
+            {"lib": "LARM-PINE",  "label": "Pine Bluffs Branch Library"},
+            {"lib": "LARM-BKMBL", "label": "Laramie County Bookmobile"},
+            {"lib": "LARM-GEN",   "label": "Laramie County Genealogy"},
+            {"lib": "LARM-VEND1", "label": "Vending Machine 1"},
+            {"lib": "LARM-VEND2", "label": "Vending Machine 2"}
+          ]
+        },
+        {
+          "label": "Lincoln County",
+          "members": [
+            {"lib": "LINC",      "label": "Lincoln County Library"},
+            {"lib": "LINC-ALPI", "label": "Alpine Branch Library"},
+            {"lib": "LINC-COKE", "label": "Cokeville Branch Library"},
+            {"lib": "LINC-LBAR", "label": "LaBarge Branch Library"},
+            {"lib": "LINC-STAR", "label": "Star Valley Branch Library"},
+            {"lib": "LINC-THAY", "label": "Thayne Branch Library"}
+          ]
+        },
+        {
+          "label": "Natrona County",
+          "members": [
+            {"lib": "NATR",       "label": "Natrona County Library"},
+            {"lib": "NATR-EDGE",  "label": "Edgerton Branch Library"},
+            {"lib": "NATR-BKMBL", "label": "Natrona Bookmobile"}
+          ]
+        },
+        {
+          "label": "Niobrara County",
+          "members": [
+            {"lib": "NIOB", "label": "Niobrara County Library"}
+          ]
+        },
+        {
+          "label": "Park County",
+          "members": [
+            {"lib": "PARK",      "label": "Park County Library, Cody"},
+            {"lib": "PARK-POWL", "label": "Powell Branch Library"},
+            {"lib": "PARK-MEET", "label": "Meeteetse Branch Library"}
+          ]
+        },
+        {
+          "label": "Platte County",
+          "members": [
+            {"lib": "PLAT",      "label": "Platte County Library"},
+            {"lib": "PLAT-CHUG", "label": "Chugwater Branch Library"},
+            {"lib": "PLAT-GLEN", "label": "Glendo Branch Library"},
+            {"lib": "PLAT-GUER", "label": "Guernsey Branch Library"}
+          ]
+        },
+        {
+          "label": "Sheridan County",
+          "members": [
+            {"lib": "SHER",       "label": "Sheridan County Library"},
+            {"lib": "SHER-CLEAR", "label": "Clearmont Branch Library"},
+            {"lib": "SHER-STOR",  "label": "Story Branch Library"},
+            {"lib": "SHER-TRIV",  "label": "Tongue River Branch Library"}
+          ]
+        },
+        {
+          "label": "Sublette County",
+          "members": [
+            {"lib": "SUBL",      "label": "Sublette County Library"},
+            {"lib": "SUBL-BIGP", "label": "Big Piney Branch Library"}
+          ]
+        },
+        {
+          "label": "Sweetwater County",
+          "members": [
+            {"lib": "SWTR",       "label": "Sweetwater County Library"},
+            {"lib": "SWTR-BAIR",  "label": "Bairoil Branch Library"},
+            {"lib": "SWTR-FARSN", "label": "Farson Branch Library"},
+            {"lib": "SWTR-GRAN",  "label": "Granger Branch Library"},
+            {"lib": "SWTR-RELI",  "label": "Reliance Branch Library"},
+            {"lib": "SWTR-RKSP",  "label": "Rock Springs Library"},
+            {"lib": "SWTR-WAMS",  "label": "Wamsutter Branch Library"},
+            {"lib": "SWTR-WMTN",  "label": "White Mountain Library"},
+            {"lib": "SWTR-SUPER", "label": "Superior Branch Library"}
+          ]
+        },
+        {
+          "label": "Teton County",
+          "members": [
+            {"lib": "TETN",      "label": "Teton County Library"},
+            {"lib": "TETN-ALTA", "label": "Alta Branch Library"}
+          ]
+        },
+        {
+          "label": "Uinta County",
+          "members": [
+            {"lib": "UINT",       "label": "Uinta County Library"},
+            {"lib": "UINT-LYMAN", "label": "Lyman Branch Library"},
+            {"lib": "UINT-MTVW",  "label": "Mountain View Branch Library"}
+          ]
+        },
+        {
+          "label": "Washakie County",
+          "members": [
+            {"lib": "WASH",      "label": "Washakie County Library"},
+            {"lib": "WASH-TENS", "label": "Ten Sleep Branch Library"}
+          ]
+        },
+        {
+          "label": "Weston County",
+          "members": [
+            {"lib": "WEST",      "label": "Weston County Library"},
+            {"lib": "WEST-UPTN", "label": "Upton Branch Library"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "schools",
+      "label": "K-12 Schools",
+      "groups": [
+        {
+          "label": "Carbon County Schools",
+          "members": [
+            {"lib": "CCSD-ELEL", "label": "Elk Mountain Schools"},
+            {"lib": "CCSD-ENSC", "label": "Encampment Schools"},
+            {"lib": "CCSD-HAEL", "label": "Hanna Elementary"},
+            {"lib": "CCSD-HAHS", "label": "Hanna High School"},
+            {"lib": "CCSD-MEDB", "label": "Medicine Bow School"},
+            {"lib": "CCSD-SAEL", "label": "Saratoga Elementary"},
+            {"lib": "CCSD-SAHS", "label": "Saratoga High School"}
+          ]
+        },
+        {
+          "label": "Crook County Schools",
+          "members": [
+            {"lib": "CRKSD-HUBR", "label": "Hulett School Library"},
+            {"lib": "CRKSD-MOEL", "label": "Moorcroft Elementary"},
+            {"lib": "CRKSD-MOHS", "label": "Moorcroft High School"},
+            {"lib": "CRKSD-SUEL", "label": "Sundance Elementary"},
+            {"lib": "CRKSD-SUHS", "label": "Sundance High School"}
+          ]
+        },
+        {
+          "label": "Other",
+          "members": [
+            {"lib": "NEHS", "label": "Newcastle High School"},
+            {"lib": "FSDD", "label": "Fremont Schools, Dubois"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "academic",
+      "label": "Academic",
+      "groups": [
+        {
+          "label": "",
+          "members": [
+            {"lib": "CSPC",      "label": "Casper College Library"},
+            {"lib": "CWC",       "label": "CWC Library"},
+            {"lib": "CWC-JACKSN","label": "CWC Jackson Campus"},
+            {"lib": "EWC",       "label": "EWC Library"},
+            {"lib": "LCCC",      "label": "LCCC Library"},
+            {"lib": "LCCC-ACC",  "label": "LCCC, Laramie Campus"},
+            {"lib": "NWC",       "label": "NWC Library"},
+            {"lib": "SHRC",      "label": "Sheridan College Library"},
+            {"lib": "SHRC-GILC", "label": "Gillette College Library"},
+            {"lib": "WWCC",      "label": "WWCC, Hay Library"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "special",
+      "label": "Special Libraries",
+      "groups": [
+        {
+          "label": "",
+          "members": [
+            {"lib": "BBHC", "label": "McCracken Research Library"},
+            {"lib": "NMWA", "label": "National Museum of Wildlife Art"},
+            {"lib": "WSL",     "label": "Wyoming State Library"},
+            {"lib": "WSL-ARC", "label": "Wyoming State Archives"},
+            {"lib": "WSL-LAW", "label": "Wyoming Law Library"},
+            {"lib": "YRL",     "label": "Yellowstone Research Library"}
+          ]
+        }
+      ]
+    }
+  ],
+  "admin": {
+    "label": "WYLD Admin",
+    "members": [
+      {"lib": "WMC", "label": "WYLD Test WMC"}
+    ]
+  }
+}
