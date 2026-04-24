@@ -274,11 +274,5 @@
         }
       ]
     }
-  ],
-  "admin": {
-    "label": "WYLD Admin",
-    "members": [
-      {"lib": "WMC", "label": "WYLD Test WMC"}
-    ]
-  }
+  ]
 }

@@ -1,5 +1,4 @@
-POLICIES_FILE = "/software/WYLD/Unicorn/Config/policies"
-IGNORE_FILE = "ignore_libraries.txt"
+POLICIES_FILE = "/software/WYLD/Symphony/Config/policies"
 
 ALL_CODE = "25000"
 
@@ -141,13 +140,6 @@ COMMA_FIELDS = {
 }
 
 
-def load_ignore_list(ignore_path):
-    try:
-        with open(ignore_path) as f:
-            return {line.strip() for line in f if line.strip()}
-    except FileNotFoundError:
-        return set()
-
 
 def _fields_to_record(record_type, fields):
     schema = SCHEMAS[record_type]
@@ -187,12 +179,6 @@ def build_lookup(records, record_type, key_field):
     """
     return {r[key_field]: r for r in records.get(record_type, [])}
 
-
-def parse_libraries(policies_path, ignore_path=IGNORE_FILE):
-    """Return LIBR records as named dicts, excluding any libs in the ignore list."""
-    ignore = load_ignore_list(ignore_path)
-    records = parse_policies(policies_path)
-    return [r for r in records['LIBR'] if r['lib'] not in ignore]
 
 
 if __name__ == "__main__":

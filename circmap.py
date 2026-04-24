@@ -30,21 +30,20 @@ def _circ_rule_cell(circ_rule_code, circ_lookup):
     return f'<a href="../Circrules/{circ_rule_code}.html">{name}</a>'
 
 
-def _build_rows(cmaps, libcode, lib_name, lookups):
+def _library_cell(library_codes, lib_name, libr_lookup):
+    if ALL_CODE in library_codes:
+        return 'All'
+    names = [libr_lookup.get(c, {}).get('lib', c) for c in library_codes]
+    return ', '.join(names) if names else lib_name
+
+
+def _build_rows(cmaps, lib_name, lookups):
     rows = []
     for cmap in cmaps:
-        if libcode not in cmap['library_codes']:
-            continue
-
-        if ALL_CODE in cmap['library_codes']:
-            library_cell = 'All'
-        else:
-            library_cell = lib_name
-
+        library_cell = _library_cell(cmap['library_codes'], lib_name, lookups['libr'])
         patron = _resolve_codes(cmap['patron_profile_codes'], lookups['uprf'])
         item_type = _resolve_codes(cmap['item_type_codes'], lookups['ityp'])
         circ_rule = _circ_rule_cell(cmap['circ_rule_code'], lookups['circ'])
-
         rows.append([cmap['name'], library_cell, patron, item_type, circ_rule])
     return rows
 
@@ -63,17 +62,17 @@ def generate(records, lookups, output_root, static_path=None):
 
         if libcode == '115':
             heading = 'Complete Circ Map Policy'
-            relevant = [c for c in cmaps if not c['library_codes']]
+            relevant = cmaps
         else:
             heading = f'Circ Map Policy for {lib_name}'
             relevant = [c for c in cmaps if libcode in c['library_codes']]
 
-        rows = _build_rows(relevant, libcode, lib, lookups)
+        rows = _build_rows(relevant, lib_name, lookups)
         all_rows = rows + HARDCODED_ROWS
 
         note = ('<div class="alert alert-info small">'
                 '<strong>NOTE:</strong> The order of the Circ Map is important. '
-                'Unicorn reads from most specific to most general — read this table from the bottom up.'
+                'Symphony reads from most specific to most general. Read this table from the bottom up.'
                 '</div>')
 
         nav = (f'<div class="page-nav">'
@@ -82,7 +81,7 @@ def generate(records, lookups, output_root, static_path=None):
                f'<a href="../userprofile/{lib.lower()}.html">User Profiles</a>'
                f'</div>')
         body = f'<h2>{heading}</h2>\n{nav}\n{note}\n{table(HEADERS, all_rows)}'
-        html = page(f'Circ Map — {lib}', body, today, static_path or '../static')
+        html = page(f'{lib} Circ Map', body, today, static_path or '../static')
 
         with open(os.path.join(out_dir, f'{lib.lower()}.html'), 'w') as f:
             f.write(html)

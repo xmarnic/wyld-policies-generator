@@ -88,15 +88,6 @@ body {
   padding: .22rem 0;
 }
 .lib-group a:hover { text-decoration: underline; color: #0f3d7a; }
-.admin-footer {
-  padding: .7rem 1.5rem;
-  font-size: .8rem;
-  color: #6c757d;
-  border-top: 1px solid var(--border);
-  background: #fff;
-}
-.admin-footer a { color: var(--accent); text-decoration: none; }
-.admin-footer a:hover { text-decoration: underline; }
 """
 
 
@@ -143,22 +134,19 @@ def generate(records, lookups, output_root, static_path=None):
 
     columns_html = '\n'.join(_render_column(col, base_path) for col in config['columns'])
 
-    admin = config['admin']
-    admin_links = ' &nbsp;|&nbsp; '.join(_member_link(m, base_path) for m in admin['members'])
-
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WYLD Circ Map</title>
+  <title>WYLD Policy Map</title>
   <link rel="stylesheet" href="{sp}/bootstrap.min.css">
   <style>{_CSS}</style>
 </head>
 <body>
   <div class="site-header">
     <div>
-      <h1>WYLD Circ Map</h1>
+      <h1>WYLD Policy Map</h1>
       <div class="tagline">Static pages &middot; refreshed nightly</div>
     </div>
     <div class="hdr-right">
@@ -169,10 +157,6 @@ def generate(records, lookups, output_root, static_path=None):
 
   <div class="columns-grid">
 {columns_html}
-  </div>
-
-  <div class="admin-footer">
-    <strong>{admin['label']}:</strong> {admin_links}
   </div>
 
   <script src="{sp}/bootstrap.bundle.min.js"></script>

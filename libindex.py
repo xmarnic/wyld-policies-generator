@@ -1,11 +1,76 @@
-"""Generates one hub page per library linking to all its policy pages."""
+"""Generates one hub page per library: library info + policy navigation cards."""
 
 import json
 import os
-from datetime import date
+from datetime import datetime, date
 from html_utils import page
 
 PREFIXES_FILE = os.path.join(os.path.dirname(__file__), 'uprf_library_prefixes.json')
+
+DAYS = [
+    ('closed_sun', 'Sunday'), ('closed_mon', 'Monday'), ('closed_tue', 'Tuesday'),
+    ('closed_wed', 'Wednesday'), ('closed_thu', 'Thursday'),
+    ('closed_fri', 'Friday'), ('closed_sat', 'Saturday'),
+]
+
+POLICY_CARDS = [
+    ('Circmap',     'Circ Map',       'Circulation rules by patron type and item type'),
+    ('Circrule',    'Circ Rules',     'Loan periods, fine structures, and renewal limits'),
+    ('Holdmap',     'Hold Map',       'Hold permissions and priority rules'),
+    ('Holdcode',    'Holding Codes',  'Item holding codes and locations'),
+    ('Defprice',    'Default Prices', 'Default replacement prices by item type'),
+]
+
+PROFILE_CARD = ('userprofile', 'User Profiles', 'Patron profile settings and borrowing limits')
+
+HUB_CSS = """
+.info-table { margin-bottom: 1.5rem; }
+.info-table th {
+  text-align: right;
+  padding-right: .75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  width: 1%;
+  color: #1b3a5c;
+}
+.info-table td { color: #212529; }
+.info-table ul { margin: 0; padding: 0; list-style: none; }
+
+.policy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+  gap: .75rem;
+  margin-top: .25rem;
+}
+.policy-card {
+  border: 1px solid #d0d7de;
+  border-radius: .4rem;
+  padding: .75rem 1rem;
+  text-decoration: none;
+  color: #1b3a5c;
+  background: #fff;
+  display: block;
+  transition: background .12s, border-color .12s;
+}
+.policy-card:hover {
+  background: #e9eff7;
+  border-color: #1b3a5c;
+  text-decoration: none;
+}
+.policy-card-title { font-weight: 700; font-size: .88rem; }
+.policy-card-desc  { font-size: .73rem; color: #6c757d; margin-top: .2rem; line-height: 1.3; }
+
+h3.section-label {
+  font-size: .68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: #8a96a3;
+  margin: 1.25rem 0 .5rem;
+  border-top: 1px solid #e8ecf0;
+  padding-top: .75rem;
+}
+"""
 
 
 def _load_prefixes():
@@ -13,8 +78,44 @@ def _load_prefixes():
         return json.load(f)
 
 
-def _link_item(href, label):
-    return f'<li><a href="{href}">{label}</a></li>'
+def _closed_days(libr):
+    closed = [label for field, label in DAYS if libr.get(field) == '1']
+    return ', '.join(closed) if closed else 'Open all days'
+
+
+def _closed_dates(libr):
+    starts = libr.get('closed_date_starts', '').split()
+    ends = libr.get('closed_date_ends', '').split()
+    if not starts:
+        return 'None'
+    items = []
+    for s, e in zip(starts, ends):
+        try:
+            sd = datetime.fromtimestamp(int(s)).strftime('%b %-d, %Y')
+            ed = datetime.fromtimestamp(int(e)).strftime('%b %-d, %Y')
+            items.append(f'<li>{sd} – {ed}</li>')
+        except (ValueError, OSError):
+            pass
+    return f'<ul>{"".join(items)}</ul>' if items else 'None'
+
+
+def _fixed_due_date(libr, lprd_lookup):
+    code = libr.get('fixed_due_date_code', '')
+    if not code or code == '1':
+        return 'No fixed date'
+    rec = lprd_lookup.get(code)
+    return rec['name'] if rec else code
+
+
+def _info_row(label, value):
+    return f'<tr><th>{label}</th><td>{value}</td></tr>'
+
+
+def _policy_card(directory, title, desc, lib_lower):
+    return (f'<a href="../{directory}/{lib_lower}.html" class="policy-card">'
+            f'<div class="policy-card-title">{title}</div>'
+            f'<div class="policy-card-desc">{desc}</div>'
+            f'</a>')
 
 
 def generate(records, lookups, output_root, static_path=None):
@@ -29,26 +130,35 @@ def generate(records, lookups, output_root, static_path=None):
         lib_lower = lib.lower()
         lib_name = libr['name']
 
-        items = [
-            _link_item(f'../Libinfo/{lib_lower}.html', 'Library Information'),
-            _link_item(f'../Circmap/{lib_lower}.html', 'Circ Map'),
-            _link_item(f'../Circrule/{lib_lower}.html', 'Circ Rules'),
-            _link_item(f'../Holdmap/{lib_lower}.html', 'Hold Map'),
-            _link_item(f'../Holdcode/{lib_lower}.html', 'Holding Codes'),
-            _link_item(f'../Defprice/{lib_lower}.html', 'Default Prices'),
-        ]
+        hold_loc_code = libr.get('hold_location_code', '')
+        hold_loc = lookups['locn'].get(hold_loc_code, {}).get('name', hold_loc_code) if hold_loc_code else '—'
 
+        info_rows = ''.join([
+            _info_row('Library Code', lib),
+            _info_row('User ID', libr.get('user_id', '')),
+            _info_row('Closed Days', _closed_days(libr)),
+            _info_row('Closed Dates', _closed_dates(libr)),
+            _info_row('Fixed Due Date', _fixed_due_date(libr, lookups['lprd'])),
+            _info_row('Hold Location', hold_loc),
+            _info_row('Accrue Fines on Closed Days',
+                      'Yes' if libr.get('accrue_fines_closed') == '1' else 'No'),
+            _info_row('Hold Expire Days', libr.get('hold_expire_days', '')),
+            _info_row('OCLC Code', libr.get('oclc_code', '')),
+        ])
+
+        cards = [_policy_card(d, t, desc, lib_lower) for d, t, desc in POLICY_CARDS]
         if lib in prefixes:
-            items.append(_link_item(f'../userprofile/{lib_lower}.html', 'User Profiles'))
+            d, t, desc = PROFILE_CARD
+            cards.append(_policy_card(d, t, desc, lib_lower))
 
-        links_html = '\n'.join(f'  {item}' for item in items)
+        body = (f'<h2>{lib_name}</h2>'
+                f'<table class="table table-sm info-table w-auto">'
+                f'<tbody>{info_rows}</tbody></table>'
+                f'<h3 class="section-label">Policy Pages</h3>'
+                f'<div class="policy-grid">{"".join(cards)}</div>'
+                f'<style>{HUB_CSS}</style>')
 
-        body = f'''<h2>{lib_name}</h2>
-<ul class="list-unstyled policy-links">
-{links_html}
-</ul>'''
-
-        html = page(f'{lib} — Library Policies', body, today, static_path or '../static')
+        html = page(f'{lib} Policies', body, today, static_path or '../static')
 
         with open(os.path.join(out_dir, f'{lib_lower}.html'), 'w') as f:
             f.write(html)

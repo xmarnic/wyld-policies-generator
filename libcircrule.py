@@ -71,7 +71,7 @@ def generate(records, lookups, output_root, static_path=None):
 
         rows = [_circ_row(c, lookups) for c in relevant_circs]
         body = f'<h2>{heading}</h2>\n{table(HEADERS, rows)}'
-        html = page(f'Circ Rules — {lib}', body, today, static_path or '../static')
+        html = page(f'{lib} Circ Rules', body, today, static_path or '../static')
 
         with open(os.path.join(out_dir, f'{lib.lower()}.html'), 'w') as f:
             f.write(html)

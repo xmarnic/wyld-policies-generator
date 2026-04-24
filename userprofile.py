@@ -88,7 +88,7 @@ def generate(records, lookups, output_root, static_path=None):
         rows = [_profile_row(u, locn_lookup) for u in relevant]
         heading = 'All User Profiles' if prefix == 'all' else f'User Profiles for {lib_name}'
         body = f'<h2>{heading}</h2>\n{table(HEADERS, rows)}'
-        html = page(f'User Profiles — {lib}', body, today, static_path or '../static')
+        html = page(f'{lib} User Profiles', body, today, static_path or '../static')
 
         with open(os.path.join(out_dir, f'{lib.lower()}.html'), 'w') as f:
             f.write(html)

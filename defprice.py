@@ -41,7 +41,7 @@ def generate(records, lookups, output_root, static_path=None):
             continue
 
         note = ('<div class="alert alert-info small">'
-                '<strong>NOTE:</strong> The Default price policy is read from the top down.'
+                '<strong>NOTE:</strong> The default price policy is read from the top down.'
                 '</div>')
 
         rows = []

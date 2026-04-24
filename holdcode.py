@@ -45,7 +45,7 @@ def generate(records, lookups, output_root, static_path=None):
             ])
 
         body = f'<h2>{heading}</h2>\n{table(HEADERS, rows)}'
-        html = page(f'Hold Codes — {lib}', body, today, static_path or '../static')
+        html = page(f'{lib} Holding Codes', body, today, static_path or '../static')
 
         with open(os.path.join(out_dir, f'{lib.lower()}.html'), 'w') as f:
             f.write(html)

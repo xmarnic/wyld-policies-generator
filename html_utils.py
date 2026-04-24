@@ -129,7 +129,7 @@ def page(title, body, date, static_path=STATIC_PATH):
 <body>
   <div class="site-header">
     <div class="inner">
-      <a href="../index.html" class="site-back">← WYLD Circ Map</a>
+      <a href="../index.html" class="site-back">← WYLD Policy Map</a>
       <h1 class="site-title">{title}</h1>
       <span class="site-date">{date}</span>
     </div>

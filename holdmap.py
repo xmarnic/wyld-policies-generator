@@ -73,7 +73,7 @@ def generate(records, lookups, output_root, static_path=None):
 
         note = ('<div class="alert alert-info small">'
                 '<strong>NOTE:</strong> The order of the Hold Map is important. '
-                'Unicorn reads from most specific to most general — read this table from the bottom up.'
+                'Symphony reads from most specific to most general. Read this table from the bottom up.'
                 '</div>')
 
         heading = 'Hold Map Policy' if libcode == '115' else f'Hold Map Policy for {lib_name}'
@@ -83,7 +83,7 @@ def generate(records, lookups, output_root, static_path=None):
                f'<a href="../userprofile/{lib.lower()}.html">User Profiles</a>'
                f'</div>')
         body = f'<h2>{heading}</h2>\n{nav}\n{note}\n{table(HEADERS, rows)}'
-        html = page(f'Hold Map — {lib}', body, today, static_path or '../static')
+        html = page(f'{lib} Hold Map', body, today, static_path or '../static')
 
         with open(os.path.join(out_dir, f'{lib.lower()}.html'), 'w') as f:
             f.write(html)
