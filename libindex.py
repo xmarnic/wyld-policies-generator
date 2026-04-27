@@ -13,6 +13,8 @@ DAYS = [
     ('closed_fri', 'Friday'), ('closed_sat', 'Saturday'),
 ]
 
+WYLD_LIBCODE = '115'
+
 POLICY_CARDS = [
     ('Circmap',     'Circ Map',       'Circulation rules by patron type and item type'),
     ('Circrule',    'Circ Rules',     'Loan periods, fine structures, and renewal limits'),
@@ -124,11 +126,13 @@ def generate(records, lookups, output_root, static_path=None):
 
     today = date.today().strftime('%B %-d, %Y')
     prefixes = _load_prefixes()
+    libs_with_holdcodes = {h.get('library_code') for h in records.get('HLDC', [])}
 
     for libr in records['LIBR']:
         lib = libr['lib']
         lib_lower = lib.lower()
         lib_name = libr['name']
+        libcode = libr['libcode']
 
         hold_loc_code = libr.get('hold_location_code', '')
         hold_loc = lookups['locn'].get(hold_loc_code, {}).get('name', hold_loc_code) if hold_loc_code else '—'
@@ -146,7 +150,11 @@ def generate(records, lookups, output_root, static_path=None):
             _info_row('OCLC Code', libr.get('oclc_code', '')),
         ])
 
-        cards = [_policy_card(d, t, desc, lib_lower) for d, t, desc in POLICY_CARDS]
+        cards = [
+            _policy_card(d, t, desc, lib_lower)
+            for d, t, desc in POLICY_CARDS
+            if d != 'Holdcode' or libcode == WYLD_LIBCODE or libcode in libs_with_holdcodes
+        ]
         if lib in prefixes:
             d, t, desc = PROFILE_CARD
             cards.append(_policy_card(d, t, desc, lib_lower))

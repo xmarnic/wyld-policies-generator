@@ -3,7 +3,7 @@
 import os
 from datetime import date
 from policy_parser import ALL_CODE
-from html_utils import page, table
+from html_utils import page, table, lib_nav
 
 HEADERS = ['NAME', 'LIBRARY', 'PATRON', 'ITEM TYPE', 'CIRC RULE']
 
@@ -75,11 +75,7 @@ def generate(records, lookups, output_root, static_path=None):
                 'Symphony reads from most specific to most general. Read this table from the bottom up.'
                 '</div>')
 
-        nav = (f'<div class="page-nav">'
-               f'<a href="../Libindex/{lib.lower()}.html">← {lib}</a>'
-               f'<a href="../Holdmap/{lib.lower()}.html">Hold Map</a>'
-               f'<a href="../userprofile/{lib.lower()}.html">User Profiles</a>'
-               f'</div>')
+        nav = lib_nav(lib, 'Circmap')
         body = f'<h2>{heading}</h2>\n{nav}\n{note}\n{table(HEADERS, all_rows)}'
         html = page(f'{lib} Circ Map', body, today, static_path or '../static')
 

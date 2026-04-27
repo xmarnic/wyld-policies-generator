@@ -9,14 +9,16 @@ CONFIG_FILE = os.path.join(os.path.dirname(__file__), 'index_config.json')
 
 _CSS = """
 :root {
-  --brand:   #1b3a5c;
-  --accent:  #1a5fa8;
-  --border:  #d0d7de;
+  --brand:   #1e66f5;
+  --accent:  #1e66f5;
+  --border:  #ccd0da;
+  --text:    #4c4f69;
 }
 body {
-  background: #edf1f7;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  font-size: .875rem;
+  background: #eff1f5;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 1rem;
+  color: var(--text);
   margin: 0;
 }
 .site-header {
@@ -25,10 +27,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  box-shadow: 0 2px 8px rgba(30,102,245,.35);
 }
 .site-header h1 { color: #fff; font-size: 1.3rem; font-weight: 700; margin: 0; }
-.site-header .tagline { color: rgba(255,255,255,.55); font-size: .73rem; margin-top: .2rem; }
+.site-header .tagline { color: rgba(255,255,255,.6); font-size: .73rem; margin-top: .2rem; }
 .hdr-right { text-align: right; }
 .hdr-right a {
   color: #fff;
@@ -41,8 +43,8 @@ body {
   white-space: nowrap;
   display: inline-block;
 }
-.hdr-right a:hover { background: rgba(255,255,255,.12); }
-.hdr-right .date { color: rgba(255,255,255,.45); font-size: .72rem; margin-top: .35rem; }
+.hdr-right a:hover { background: rgba(255,255,255,.15); }
+.hdr-right .date { color: rgba(255,255,255,.55); font-size: .72rem; margin-top: .35rem; }
 .columns-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -52,11 +54,11 @@ body {
 @media (max-width: 1000px) { .columns-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 550px)  { .columns-grid { grid-template-columns: 1fr; } }
 .col-card {
-  background: #fff;
+  background: #e6e9ef;
   border: 1px solid var(--border);
   border-radius: .4rem;
   overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  box-shadow: 0 1px 4px rgba(30,102,245,.1);
 }
 .col-card-header {
   background: var(--brand);
@@ -68,14 +70,14 @@ body {
   text-transform: uppercase;
 }
 .col-card-body { padding: .6rem .9rem; }
-.lib-group { border-top: 1px solid #e8ecf0; }
+.lib-group { border-top: 1px solid #bcc0cc; }
 .lib-group:first-child { border-top: none; }
 .lib-group-label {
   font-size: .67rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: .07em;
-  color: #8a96a3;
+  color: #7c7f93;
   padding: .5rem 0 .15rem;
 }
 .lib-group ul { margin: 0; padding: 0 0 .5rem; list-style: none; }
@@ -87,7 +89,7 @@ body {
   display: block;
   padding: .22rem 0;
 }
-.lib-group a:hover { text-decoration: underline; color: #0f3d7a; }
+.lib-group a:hover { text-decoration: underline; color: #1558d6; }
 """
 
 
@@ -141,7 +143,11 @@ def generate(records, lookups, output_root, static_path=None):
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>WYLD Policy Map</title>
   <link rel="stylesheet" href="{sp}/bootstrap.min.css">
-  <style>{_CSS}</style>
+  <style>@font-face {{
+  font-family: 'Geist';
+  src: url('{sp}/fonts/GeistVar.woff2') format('woff2');
+  font-weight: 100 900;
+}}{_CSS}</style>
 </head>
 <body>
   <div class="site-header">

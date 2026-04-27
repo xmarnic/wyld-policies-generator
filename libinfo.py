@@ -2,7 +2,7 @@
 
 import os
 from datetime import datetime, date
-from html_utils import page
+from html_utils import page, lib_nav
 
 WYLD_LIBCODE = '115'
 
@@ -80,7 +80,9 @@ def generate(records, lookups, output_root, static_path=None):
             _row('OCLC Code', libr.get('oclc_code', '')),
         ])
 
+        nav = lib_nav(lib, 'Libinfo')
         body = (f'<h2>Library Information — {lib_name}</h2>'
+                f'{nav}'
                 f'<table class="table table-bordered table-sm w-auto">'
                 f'<tbody>{rows_html}</tbody>'
                 f'</table>')

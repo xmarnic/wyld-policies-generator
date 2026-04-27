@@ -2,7 +2,7 @@
 
 import os
 from datetime import date
-from html_utils import page, table
+from html_utils import page, table, lib_nav
 
 HEADERS = ['NAME', 'DESCRIPTION', 'LIBRARY', 'LOCATION', 'ITEM TYPE']
 
@@ -44,7 +44,8 @@ def generate(records, lookups, output_root, static_path=None):
                 ityp_cell,
             ])
 
-        body = f'<h2>{heading}</h2>\n{table(HEADERS, rows)}'
+        nav = lib_nav(lib, 'Holdcode')
+        body = f'<h2>{heading}</h2>\n{nav}\n{table(HEADERS, rows)}'
         html = page(f'{lib} Holding Codes', body, today, static_path or '../static')
 
         with open(os.path.join(out_dir, f'{lib.lower()}.html'), 'w') as f:

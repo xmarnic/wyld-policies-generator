@@ -3,7 +3,7 @@
 import os
 from datetime import date
 from policy_parser import ALL_CODE
-from html_utils import page, table
+from html_utils import page, table, lib_nav
 
 HEADERS = ['NAME', 'DESCRIPTION', 'LIBRARY', 'ITEM TYPE', 'USER PROFILE', 'PERMISSION', 'PRIORITY']
 
@@ -77,11 +77,7 @@ def generate(records, lookups, output_root, static_path=None):
                 '</div>')
 
         heading = 'Hold Map Policy' if libcode == '115' else f'Hold Map Policy for {lib_name}'
-        nav = (f'<div class="page-nav">'
-               f'<a href="../Libindex/{lib.lower()}.html">← {lib}</a>'
-               f'<a href="../Circmap/{lib.lower()}.html">Circ Map</a>'
-               f'<a href="../userprofile/{lib.lower()}.html">User Profiles</a>'
-               f'</div>')
+        nav = lib_nav(lib, 'Holdmap')
         body = f'<h2>{heading}</h2>\n{nav}\n{note}\n{table(HEADERS, rows)}'
         html = page(f'{lib} Hold Map', body, today, static_path or '../static')
 

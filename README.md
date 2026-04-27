@@ -10,7 +10,7 @@ python3 generate.py [policies_file] [output_dir] [--local]
 
 | Argument | Default | Description |
 |---|---|---|
-| `policies_file` | `/software/WYLD/Symphony/Config/policies` | Path to the Symphony policies flat file |
+| `policies_file` | `/software/WYLD/Unicorn/Config/policies` | Path to the Symphony policies flat file |
 | `output_dir` | `/software/apache/WYLD/htdocs/new-map` | Root directory for generated HTML |
 | `--local` | off | Copy Bootstrap assets into `output_dir/static/` and use relative paths (for local development) |
 

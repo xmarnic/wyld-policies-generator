@@ -1,4 +1,4 @@
-POLICIES_FILE = "/software/WYLD/Symphony/Config/policies"
+POLICIES_FILE = "/software/WYLD/Unicorn/Config/policies"
 
 ALL_CODE = "25000"
 
