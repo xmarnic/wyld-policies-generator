@@ -134,19 +134,18 @@ def generate(records, lookups, output_root, static_path=None):
         lib_name = libr['name']
         libcode = libr['libcode']
 
-        hold_loc_code = libr.get('hold_location_code', '')
-        hold_loc = lookups['locn'].get(hold_loc_code, {}).get('name', hold_loc_code) if hold_loc_code else '—'
-
         info_rows = ''.join([
             _info_row('Library Code', lib),
-            _info_row('User ID', libr.get('user_id', '')),
             _info_row('Closed Days', _closed_days(libr)),
             _info_row('Closed Dates', _closed_dates(libr)),
             _info_row('Fixed Due Date', _fixed_due_date(libr, lookups['lprd'])),
-            _info_row('Hold Location', hold_loc),
             _info_row('Accrue Fines on Closed Days',
                       'Yes' if libr.get('accrue_fines_closed') == '1' else 'No'),
+            _info_row('Hold Group Libraries', lookups['libg'].get(libr.get('hold_group', ''), '')),
             _info_row('Hold Expire Days', libr.get('hold_expire_days', '')),
+            _info_row('Avail Hold Expire Days', libr.get('avail_hold_expire_days', '')),
+            _info_row('Onshelf Holds Trapped on Closed Dates',
+                      'True' if libr.get('skip_onshelf_holds_closed') == '0' else 'False'),
             _info_row('OCLC Code', libr.get('oclc_code', '')),
         ])
 

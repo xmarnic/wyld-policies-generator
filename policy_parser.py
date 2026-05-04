@@ -1,4 +1,5 @@
 POLICIES_FILE = "/software/WYLD/Unicorn/Config/policies"
+LIBG_FILE = "/software/WYLD/Unicorn/Config/libg.pol"
 
 ALL_CODE = "25000"
 
@@ -29,6 +30,7 @@ SCHEMAS = {
         28: 'serials_display_libs',
         29: 'serials_maint_libs',
         38: 'hold_avail_libs',
+        40: 'skip_onshelf_holds_closed',
         42: 'callnum_maint_group',
         43: 'item_maint_group',
         44: 'marc_maint_group',
@@ -179,6 +181,17 @@ def build_lookup(records, record_type, key_field):
     """
     return {r[key_field]: r for r in records.get(record_type, [])}
 
+
+
+def parse_libg(path=LIBG_FILE):
+    """Parse libg.pol and return a dict mapping group ID -> short code."""
+    libg = {}
+    with open(path, 'r') as f:
+        for line in f:
+            fields = line.rstrip('\n').split('|')
+            if fields[0] == 'LIBG' and len(fields) > 2:
+                libg[fields[1]] = fields[2]
+    return libg
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@
 import os
 import sys
 
-from policy_parser import parse_policies, build_lookup, POLICIES_FILE
+from policy_parser import parse_policies, parse_libg, build_lookup, POLICIES_FILE
 import circmap
 import circrule
 import defprice
@@ -35,6 +35,8 @@ def main(policies_path=POLICIES_FILE, output_root=OUTPUT_ROOT, local=False):
     print(f"Parsing {policies_path}...")
     records = parse_policies(policies_path)
     lookups = build_lookups(records)
+    libg_path = os.path.join(os.path.dirname(policies_path), 'libg.pol')
+    lookups['libg'] = parse_libg(libg_path)
 
     os.makedirs(output_root, exist_ok=True)
 
