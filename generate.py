@@ -16,7 +16,7 @@ import libindex
 import libinfo
 import userprofile
 
-OUTPUT_ROOT = "/software/apache/WYLD/htdocs/new-map"
+OUTPUT_ROOT = "/software/apache/WYLD/htdocs/map"
 
 
 def build_lookups(records):
