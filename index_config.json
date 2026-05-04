@@ -14,7 +14,7 @@
             {"lib": "ALBY",      "label": "Albany County Library"},
             {"lib": "ALBY-CENT", "label": "Centennial Branch Library"},
             {"lib": "ALBY-ROCK", "label": "Rock River Branch Library"},
-            {"lib": "ALBY-BKMBL","label": "Bookmobile"}
+            {"lib": "ALBY-BKMBL","label": "Albany County Bookmobile"}
           ]
         },
         {
@@ -208,7 +208,6 @@
         {
           "label": "Carbon County Schools",
           "members": [
-            {"lib": "CCSD-ELEL", "label": "Elk Mountain Schools"},
             {"lib": "CCSD-ENSC", "label": "Encampment Schools"},
             {"lib": "CCSD-HAEL", "label": "Hanna Elementary"},
             {"lib": "CCSD-HAHS", "label": "Hanna High School"},
