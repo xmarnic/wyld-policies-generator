@@ -144,7 +144,7 @@ def generate(records, lookups, output_root, static_path=None):
             _info_row('Hold Group Libraries', lookups['libg'].get(libr.get('hold_group', ''), '')),
             _info_row('Hold Expire Days', libr.get('hold_expire_days', '')),
             _info_row('Avail Hold Expire Days', libr.get('avail_hold_expire_days', '')),
-            _info_row('Onshelf Holds Trapped on Closed Dates',
+            _info_row('Onshelf Holds Selected on Closed Dates',
                       'True' if libr.get('skip_onshelf_holds_closed') == '0' else 'False'),
             _info_row('OCLC Code', libr.get('oclc_code', '')),
         ])
