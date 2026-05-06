@@ -43,13 +43,12 @@ def main(policies_path=POLICIES_FILE, output_root=OUTPUT_ROOT, local=False):
 
     os.makedirs(output_root, exist_ok=True)
 
-    static_path = None
-    if local:
-        import shutil
-        static_src = os.path.join(os.path.dirname(__file__), 'static')
-        static_dst = os.path.join(output_root, 'static')
-        shutil.copytree(static_src, static_dst, dirs_exist_ok=True)
-        static_path = '../static'
+    import shutil
+    static_src = os.path.join(os.path.dirname(__file__), 'static')
+    static_dst = os.path.join(output_root, 'static')
+    shutil.copytree(static_src, static_dst, dirs_exist_ok=True)
+
+    static_path = '../static' if local else None
 
     circmap.generate(records, lookups, output_root, static_path)
     circrule.generate(records, lookups, output_root, static_path)
