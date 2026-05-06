@@ -46,7 +46,9 @@ def main(policies_path=POLICIES_FILE, output_root=OUTPUT_ROOT, local=False):
     import shutil
     static_src = os.path.join(os.path.dirname(__file__), 'static')
     static_dst = os.path.join(output_root, 'static')
-    shutil.copytree(static_src, static_dst, dirs_exist_ok=True)
+    if os.path.exists(static_dst):
+        shutil.rmtree(static_dst)
+    shutil.copytree(static_src, static_dst)
 
     static_path = '../static' if local else None
 
