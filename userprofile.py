@@ -28,6 +28,21 @@ def _load_prefixes():
         return json.load(f)
 
 
+def libs_with_userprofile(records):
+    prefixes = _load_prefixes()
+    all_uprfs = records['UPRF']
+    result = set()
+    for libr in records['LIBR']:
+        lib = libr['lib']
+        prefix = prefixes.get(lib)
+        if prefix is None:
+            continue
+        relevant = all_uprfs if prefix == 'all' else [u for u in all_uprfs if u['name'].startswith(prefix)]
+        if relevant:
+            result.add(lib)
+    return result
+
+
 def _card_life(life_type, life_value):
     unit = CARD_LIFE_UNITS.get(life_type)
     if unit is None:
@@ -87,7 +102,7 @@ def generate(records, lookups, output_root, static_path=None):
 
         rows = [_profile_row(u, locn_lookup) for u in relevant]
         heading = 'All User Profiles' if prefix == 'all' else f'User Profiles for {lib_name}'
-        nav = lib_nav(lib, 'userprofile')
+        nav = lib_nav(lib, 'userprofile', lookups)
         body = f'<h2>{heading}</h2>\n{nav}\n{table(HEADERS, rows)}'
         html = page(f'{lib} User Profiles', body, today, static_path or '../static')
 

@@ -129,7 +129,7 @@ def generate(records, lookups, output_root, static_path=None):
     config = _load_config()
     sp = static_path or STATIC_PATH
     today = date.today().strftime('%B %-d, %Y')
-    base_path = '/new-map/' if static_path is None else ''
+    base_path = '/map/' if static_path is None else ''
 
     standalone = config['standalone']
     standalone_link = _member_link(standalone, base_path)

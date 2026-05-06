@@ -80,7 +80,7 @@ def generate(records, lookups, output_root, static_path=None):
             _row('OCLC Code', libr.get('oclc_code', '')),
         ])
 
-        nav = lib_nav(lib, 'Libinfo')
+        nav = lib_nav(lib, 'Libinfo', lookups)
         body = (f'<h2>Library Information — {lib_name}</h2>'
                 f'{nav}'
                 f'<table class="table table-bordered table-sm w-auto">'

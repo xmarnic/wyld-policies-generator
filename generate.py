@@ -38,6 +38,8 @@ def main(policies_path=POLICIES_FILE, output_root=OUTPUT_ROOT, local=False):
     libg_path = os.path.join(os.path.dirname(policies_path), 'libg.pol')
     lookups['libg'] = parse_libg(libg_path)
 
+    lookups['libs_with_userprofile'] = userprofile.libs_with_userprofile(records)
+
     os.makedirs(output_root, exist_ok=True)
 
     static_path = None

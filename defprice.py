@@ -62,7 +62,7 @@ def generate(records, lookups, output_root, static_path=None):
                 _yesno(defp.get('deduct_overdue_fine', '0')),
             ])
 
-        nav = lib_nav(lib, 'Defprice')
+        nav = lib_nav(lib, 'Defprice', lookups)
         body = f'<h2>{heading}</h2>\n{nav}\n{note}\n{table(HEADERS, rows)}'
         html = page(f'Default Prices — {lib}', body, today, static_path or '../static')
 

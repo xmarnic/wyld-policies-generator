@@ -1,6 +1,6 @@
 """Shared HTML helpers used by all generators."""
 
-STATIC_PATH = "/new-map/static"
+STATIC_PATH = "/map/static"
 
 _CSS = """
 :root {
@@ -126,12 +126,16 @@ _LIB_NAV_PAGES = [
 ]
 
 
-def lib_nav(lib, current_dir=None):
+def lib_nav(lib, current_dir=None, lookups=None):
     lib_lower = lib.lower()
+    libs_with_userprofile = (lookups or {}).get('libs_with_userprofile', set())
     links = [f'<a href="../Libindex/{lib_lower}.html">← {lib}</a>']
     for directory, label in _LIB_NAV_PAGES:
-        if directory != current_dir:
-            links.append(f'<a href="../{directory}/{lib_lower}.html">{label}</a>')
+        if directory == current_dir:
+            continue
+        if directory == 'userprofile' and lib not in libs_with_userprofile:
+            continue
+        links.append(f'<a href="../{directory}/{lib_lower}.html">{label}</a>')
     return f'<div class="page-nav">{"".join(links)}</div>'
 
 
