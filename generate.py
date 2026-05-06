@@ -3,6 +3,7 @@
 
 import os
 import sys
+from datetime import datetime
 
 from policy_parser import parse_policies, parse_libg, build_lookup, POLICIES_FILE
 import circmap
@@ -32,7 +33,7 @@ def build_lookups(records):
 
 
 def main(policies_path=POLICIES_FILE, output_root=OUTPUT_ROOT, local=False):
-    print(f"Parsing {policies_path}...")
+    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Started")
     records = parse_policies(policies_path)
     lookups = build_lookups(records)
     libg_path = os.path.join(os.path.dirname(policies_path), 'libg.pol')
@@ -61,7 +62,7 @@ def main(policies_path=POLICIES_FILE, output_root=OUTPUT_ROOT, local=False):
     libindex.generate(records, lookups, output_root, static_path)
     index_page.generate(records, lookups, output_root, './static' if local else None)
 
-    print("Done.")
+    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Finished successfully")
 
 
 if __name__ == "__main__":

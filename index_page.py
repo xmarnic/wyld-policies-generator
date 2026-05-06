@@ -173,4 +173,3 @@ def generate(records, lookups, output_root, static_path=None):
     with open(out_path, 'w') as f:
         f.write(html)
 
-    print(f"  index: wrote {out_path}")

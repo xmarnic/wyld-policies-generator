@@ -84,4 +84,3 @@ def generate(records, lookups, output_root, static_path=None):
         with open(os.path.join(out_dir, f'{lib.lower()}.html'), 'w') as f:
             f.write(html)
 
-    print(f"  holdmap: wrote {len(records['LIBR'])} pages to {out_dir}")

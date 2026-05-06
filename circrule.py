@@ -55,4 +55,3 @@ def generate(records, lookups, output_root, static_path=None):
         with open(os.path.join(out_dir, f'{code}.html'), 'w') as f:
             f.write(html)
 
-    print(f"  circrule: wrote {len(records['CIRC'])} pages to {out_dir}")
