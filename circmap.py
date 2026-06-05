@@ -5,16 +5,9 @@ from datetime import date
 from policy_parser import ALL_CODE
 from html_utils import page, table, lib_nav
 
-HEADERS = ['NAME', 'LIBRARY', 'PATRON', 'ITEM TYPE', 'CIRC RULE']
+HEADERS = ['NAME', 'LIBRARY', 'PROFILE', 'ITEM TYPE', 'CIRC RULE']
 
-HARDCODED_ROWS = [
-    ['DEFAULT',    'ALL', 'ALL',                                        'ALL', 'NONCIRC-Y'],
-    ['DISPLAY-AL', 'ALL', 'BINDERY, DISPLAY',                          'ALL', '<a href="../Circrules/53.html">D120-RULE1</a>'],
-    ['LIB-USE',    'ALL', 'DISP_NEW, DISPLAY, LIBRARYUSE, LL, LOST, MISSING', 'ALL', '<a href="../Circrules/3.html">UNLIMITED</a>'],
-    ['LOSTCARD',   'ALL', 'LOSTCARD',                                  'ALL', 'NONCIRC-N'],
-    ['FDILL-ALL',  'ALL', 'FDILL',                                     'ALL', '<a href="../Circrules/36.html">D28-RULE2</a>'],
-    ['REPAIR-ALL', 'ALL', 'REPAIR',                                    'ALL', '<a href="../Circrules/53.html">D120-RULE1</a>'],
-]
+UNIVERSAL_NAMES = ['DEFAULT', 'LIB-USE', 'DISPLAY-AL', 'LOSTCARD', 'FDILL-ALL', 'REPAIR-ALL']
 
 
 def _resolve_codes(codes, lookup, all_label='All'):
@@ -55,6 +48,10 @@ def generate(records, lookups, output_root, static_path=None):
     today = date.today().strftime('%B %-d, %Y')
     cmaps = records['CMAP']
 
+    universal = [c for c in cmaps if ALL_CODE in c['library_codes'] and c['name'] in UNIVERSAL_NAMES]
+    default_row = [c for c in universal if c['name'] == 'DEFAULT']
+    universal_tail = [c for c in universal if c['name'] != 'DEFAULT']
+
     for libr in records['LIBR']:
         libcode = libr['libcode']
         lib = libr['lib']
@@ -62,13 +59,13 @@ def generate(records, lookups, output_root, static_path=None):
 
         if libcode == '115':
             heading = 'Complete Circ Map Policy'
-            relevant = cmaps
+            all_rows = _build_rows(cmaps, lib_name, lookups)
         else:
             heading = f'Circ Map Policy for {lib_name}'
             relevant = [c for c in cmaps if libcode in c['library_codes']]
-
-        rows = _build_rows(relevant, lib_name, lookups)
-        all_rows = rows + HARDCODED_ROWS
+            all_rows = (_build_rows(default_row, lib_name, lookups)
+                        + _build_rows(relevant, lib_name, lookups)
+                        + _build_rows(universal_tail, lib_name, lookups))
 
         note = ('<div class="alert alert-info small">'
                 '<strong>NOTE:</strong> The order of the Circ Map is important. '
