@@ -19,11 +19,17 @@ There are no tests and no linter configured. The `policies` file in the repo roo
 **Data flow:**
 1. `policy_parser.py` reads the `|`-delimited policies flat file and maps fields by index (per `SCHEMAS`) into named dicts. Fields not in the schema are ignored. List-valued fields (e.g. `library_codes`) are split on commas.
 2. `generate.py` builds O(1) lookup dicts (`circ`, `uprf`, `ityp`, `locn`, `lprd`, `bstr`, `libr`, `libg`) for cross-referencing codes to names.
-3. Each generator module (e.g. `circmap.py`, `holdmap.py`) filters and renders its own subset of records into HTML pages, one per library.
+3. Each generator module (e.g. `circmap.py`, `holdmap.py`) filters and renders its own subset of records into HTML pages, one per library. `wyldprofiles.py` is the exception — it renders WYLD-only, single-page admin reports (see below), not one page per library.
 
 **Special values:**
 - `ALL_CODE = "25000"` — the sentinel value meaning "applies to all libraries/patrons/item types" in list-valued CMAP/HMAP fields.
-- Library `libcode` `"115"` is the WYLD-wide library; `circmap.py` uses it to generate the "Complete Circ Map Policy" page showing all CMAP records unfiltered.
+- Library `libcode` `"115"` is the WYLD-wide library; `circmap.py` uses it to generate the "Complete Circ Map Policy" page showing all CMAP records unfiltered. `libindex.py`'s `WYLD_LIBCODE` constant is the same value, used to gate cards that should only appear on the WYLD hub page (e.g. the Recirculating/Library Use profile cards added by `wyldprofiles.py`).
+
+**UPRF field indexing gotcha:**
+`SCHEMAS` indexes directly into `line.split('|')`, where `fields[0]` is the record-type token (e.g. `"UPRF"`) itself. If you're checking field positions with `cut -d'|' -f N` against the raw policies file, `cut` counts that record-type token as field 1 — so a schema index is always `cut` field number minus 1. Verify any new field mapping against `mock-data/policies` for a record whose value you can predict (e.g. `LIBRARYUSE` is recirculating and library-use; `17PA` is a patron profile and isn't) before trusting the offset.
+
+**WYLD-only admin reports (`wyldprofiles.py`):**
+Some data isn't meaningfully per-library — e.g. UPRF's `recirculating` and `increment_charge_counter` flags are profile-wide, not library-scoped. `wyldprofiles.py` generates these as single global pages (`userprofile/wyld.html`, `recircprofiles/wyld.html`, `libraryuseprofiles/wyld.html`), reusing `HEADERS`/`_profile_row` from `userprofile.py` rather than duplicating the table rendering. Their cards are added in `libindex.py`'s `generate()` only when `libcode == WYLD_LIBCODE`. Note `userprofile.py` itself no longer generates the "all profiles" page for WYLD (that special case was moved into `wyldprofiles.py`) — its per-library loop skips any `lib` whose `uprf_library_prefixes.json` prefix is `"all"`.
 
 **Shared rendering:**
 - `html_utils.py` — `page()` wraps a body string in the full HTML shell with header/nav/styles; `table()` renders a list of rows into a Bootstrap table; `lib_nav()` builds the per-page nav strip.
@@ -32,7 +38,7 @@ There are no tests and no linter configured. The `policies` file in the repo roo
 ## Configuration Files
 
 - **`index_config.json`** — controls which libraries appear on the index page and how they are grouped. Libraries in the policies file but absent here still get pages generated; they just won't be linked from the index.
-- **`uprf_library_prefixes.json`** — maps library `lib` abbreviation to the UPRF record name prefix (e.g. `"LARM": "02"`). This is not derivable from the policies file. Libraries absent here get no User Profiles page.
+- **`uprf_library_prefixes.json`** — maps library `lib` abbreviation to the UPRF record name prefix (e.g. `"LARM": "02"`). This is not derivable from the policies file. Libraries absent here get no User Profiles page. `"WYLD": "all"` is the special case consumed by `wyldprofiles.py`.
 
 ## Adding a New Generator
 
