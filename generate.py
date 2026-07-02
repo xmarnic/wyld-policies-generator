@@ -15,6 +15,7 @@ import index_page
 import libcircrule
 import libindex
 import libinfo
+import recircprofiles
 import userprofile
 
 OUTPUT_ROOT = "/software/apache/WYLD/htdocs/map"
@@ -60,6 +61,7 @@ def main(policies_path=POLICIES_FILE, output_root=OUTPUT_ROOT, local=False):
     libinfo.generate(records, lookups, output_root, static_path)
     libcircrule.generate(records, lookups, output_root, static_path)
     userprofile.generate(records, lookups, output_root, static_path)
+    recircprofiles.generate(records, lookups, output_root, static_path)
     libindex.generate(records, lookups, output_root, static_path)
     index_page.generate(records, lookups, output_root, './static' if local else None)
 

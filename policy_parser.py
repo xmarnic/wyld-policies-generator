@@ -60,6 +60,7 @@ SCHEMAS = {
     'UPRF': {
         1:  'code',
         2:  'name',
+        5:  'recirculating',
         6:  'card_life_type',
         7:  'card_life_value',
         8:  'overdue_threshold',
