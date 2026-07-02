@@ -25,6 +25,7 @@ POLICY_CARDS = [
 
 PROFILE_CARD = ('userprofile', 'User Profiles', 'Patron profile settings and borrowing limits')
 RECIRC_CARD = ('recircprofiles', 'Recirculating Profiles', 'User profiles flagged as recirculating')
+LIBRARY_USE_CARD = ('libraryuseprofiles', 'Library Use Profiles', 'User profiles that do not increment the charge counter')
 
 HUB_CSS = """
 .info-table { margin-bottom: 1.5rem; }
@@ -160,6 +161,8 @@ def generate(records, lookups, output_root, static_path=None):
             cards.append(_policy_card(d, t, desc, lib_lower))
         if libcode == WYLD_LIBCODE:
             d, t, desc = RECIRC_CARD
+            cards.append(_policy_card(d, t, desc, lib_lower))
+            d, t, desc = LIBRARY_USE_CARD
             cards.append(_policy_card(d, t, desc, lib_lower))
 
         body = (f'<h2>{lib_name}</h2>'

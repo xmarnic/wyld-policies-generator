@@ -89,19 +89,16 @@ def generate(records, lookups, output_root, static_path=None):
         lib_name = libr['name']
         prefix = prefixes.get(lib)
 
-        if prefix is None:
+        if prefix is None or prefix == 'all':
             continue
 
-        if prefix == 'all':
-            relevant = all_uprfs
-        else:
-            relevant = [u for u in all_uprfs if u['name'].startswith(prefix)]
+        relevant = [u for u in all_uprfs if u['name'].startswith(prefix)]
 
         if not relevant:
             continue
 
         rows = [_profile_row(u, locn_lookup) for u in relevant]
-        heading = 'All User Profiles' if prefix == 'all' else f'User Profiles for {lib_name}'
+        heading = f'User Profiles for {lib_name}'
         nav = lib_nav(lib, 'userprofile', lookups)
         body = f'<h2>{heading}</h2>\n{nav}\n{table(HEADERS, rows)}'
         html = page(f'{lib} User Profiles', body, today, static_path or '../static')
