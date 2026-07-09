@@ -61,6 +61,7 @@ def generate(records, lookups, output_root, static_path=None):
 
     for libr in records['LIBR']:
         lib = libr['lib']
+        libcode = libr['libcode']
         lib_name = libr['name']
 
         hold_loc_code = libr.get('hold_location_code', '')
@@ -80,7 +81,7 @@ def generate(records, lookups, output_root, static_path=None):
             _row('OCLC Code', libr.get('oclc_code', '')),
         ])
 
-        nav = lib_nav(lib, 'Libinfo', lookups)
+        nav = lib_nav(lib, libcode, 'Libinfo', lookups)
         body = (f'<h2>Library Information — {lib_name}</h2>'
                 f'{nav}'
                 f'<table class="table table-bordered table-sm w-auto">'

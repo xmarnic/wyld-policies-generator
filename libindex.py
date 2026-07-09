@@ -1,35 +1,15 @@
 """Generates one hub page per library: library info + policy navigation cards."""
 
-import json
 import os
 from datetime import datetime, date
 from html_utils import page
-
-PREFIXES_FILE = os.path.join(os.path.dirname(__file__), 'uprf_library_prefixes.json')
+from policy_cards import available_cards
 
 DAYS = [
     ('closed_sun', 'Sunday'), ('closed_mon', 'Monday'), ('closed_tue', 'Tuesday'),
     ('closed_wed', 'Wednesday'), ('closed_thu', 'Thursday'),
     ('closed_fri', 'Friday'), ('closed_sat', 'Saturday'),
 ]
-
-WYLD_LIBCODE = '115'
-
-POLICY_CARDS = [
-    ('Circmap',     'Circ Map'),
-    ('Circrule',    'Circ Rules'),
-    ('Holdmap',     'Hold Map'),
-    ('Holdcode',    'Holding Codes'),
-    ('Defprice',    'Default Prices'),
-]
-
-PROFILE_CARD = ('userprofile', 'User Profiles')
-RECIRC_CARD = ('recircprofiles', 'Recirculating Profiles')
-LIBRARY_USE_CARD = ('libraryuseprofiles', 'Library Use Profiles')
-ITEMTYPE_CARD = ('itemtype', 'Item Type Policies')
-LOCATION_CARD = ('location', 'Location Policies')
-ITEMCATEGORY_CARD = ('itemcategory', 'Item Category Policies')
-USERCATEGORY_CARD = ('usercategory', 'User Category Policies')
 
 HUB_CSS = """
 .info-table { margin-bottom: 1.5rem; }
@@ -80,11 +60,6 @@ h3.section-label {
 """
 
 
-def _load_prefixes():
-    with open(PREFIXES_FILE) as f:
-        return json.load(f)
-
-
 def _closed_days(libr):
     closed = [label for field, label in DAYS if libr.get(field) == '1']
     return ', '.join(closed) if closed else 'Open all days'
@@ -129,8 +104,6 @@ def generate(records, lookups, output_root, static_path=None):
     os.makedirs(out_dir, exist_ok=True)
 
     today = date.today().strftime('%B %-d, %Y')
-    prefixes = _load_prefixes()
-    libs_with_holdcodes = {h.get('library_code') for h in records.get('HLDC', [])}
 
     for libr in records['LIBR']:
         lib = libr['lib']
@@ -153,19 +126,7 @@ def generate(records, lookups, output_root, static_path=None):
             _info_row('OCLC Code', libr.get('oclc_code', '')),
         ])
 
-        cards = [
-            _policy_card(d, t, lib_lower)
-            for d, t in POLICY_CARDS
-            if d != 'Holdcode' or libcode == WYLD_LIBCODE or libcode in libs_with_holdcodes
-        ]
-        if lib in prefixes:
-            d, t = PROFILE_CARD
-            cards.append(_policy_card(d, t, lib_lower))
-        if libcode == WYLD_LIBCODE:
-            for card in (RECIRC_CARD, LIBRARY_USE_CARD, ITEMTYPE_CARD, LOCATION_CARD,
-                         ITEMCATEGORY_CARD, USERCATEGORY_CARD):
-                d, t = card
-                cards.append(_policy_card(d, t, lib_lower))
+        cards = [_policy_card(d, t, lib_lower) for d, t in available_cards(lib, libcode, lookups)]
 
         body = (f'<h2>{lib_name}</h2>'
                 f'<table class="table table-sm info-table w-auto">'

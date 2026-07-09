@@ -50,6 +50,7 @@ def main(policies_path=POLICIES_FILE, output_root=OUTPUT_ROOT, local=False):
         records[f'CAT{n}'] = ucat[f'CAT{n}']
 
     lookups['libs_with_userprofile'] = userprofile.libs_with_userprofile(records)
+    lookups['libs_with_holdcodes'] = {h.get('library_code') for h in records.get('HLDC', [])}
 
     os.makedirs(output_root, exist_ok=True)
 

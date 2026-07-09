@@ -77,7 +77,7 @@ def generate(records, lookups, output_root, static_path=None):
                 '</div>')
 
         heading = 'Hold Map Policy' if libcode == '115' else f'Hold Map Policy for {lib_name}'
-        nav = lib_nav(lib, 'Holdmap', lookups)
+        nav = lib_nav(lib, libcode, 'Holdmap', lookups)
         body = f'<h2>{heading}</h2>\n{nav}\n{note}\n{table(HEADERS, rows)}'
         html = page(f'{lib} Hold Map', body, today, static_path or '../static')
 

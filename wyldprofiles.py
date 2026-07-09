@@ -10,6 +10,7 @@ from html_utils import page, table, lib_nav
 from userprofile import HEADERS, _profile_row
 
 WYLD_LIB = 'WYLD'
+WYLD_LIBCODE = '115'
 
 REF_HEADERS = ['SHORT-CODE', 'DESCRIPTION']
 
@@ -70,42 +71,42 @@ def generate(records, lookups, output_root, static_path=None):
     _write_profiles_page(
         all_uprfs, 'All User Profiles', f'{WYLD_LIB} User Profiles',
         os.path.join(output_root, 'userprofile'), locn_lookup, static_path,
-        lib_nav(WYLD_LIB, 'userprofile', lookups))
+        lib_nav(WYLD_LIB, WYLD_LIBCODE, 'userprofile', lookups))
 
     recirculating = [u for u in all_uprfs if u.get('recirculating') == 'Y']
     _write_profiles_page(
         recirculating, 'Recirculating User Profiles', 'Recirculating User Profiles',
         os.path.join(output_root, 'recircprofiles'), locn_lookup, static_path,
-        lib_nav(WYLD_LIB, 'recircprofiles', lookups))
+        lib_nav(WYLD_LIB, WYLD_LIBCODE, 'recircprofiles', lookups))
 
     library_use = [u for u in all_uprfs if u.get('increment_charge_counter') == '0']
     _write_profiles_page(
-        library_use, 'Library Use User Profiles', 'Library Use User Profiles',
+        library_use, 'Library-Use User Profiles', 'Library-Use User Profiles',
         os.path.join(output_root, 'libraryuseprofiles'), locn_lookup, static_path,
-        lib_nav(WYLD_LIB, 'libraryuseprofiles', lookups))
+        lib_nav(WYLD_LIB, WYLD_LIBCODE, 'libraryuseprofiles', lookups))
 
     ityp_rows = [[r['name'], _clean_description(r['description'])]
                  for r in sorted(records['ITYP'], key=lambda r: r['name'])]
     _write_flat_report(
-        ityp_rows, 'Item Type Policies', 'Item Type Policies',
+        ityp_rows, 'Item Types', 'Item Types',
         os.path.join(output_root, 'itemtype'), static_path,
-        lib_nav(WYLD_LIB, 'itemtype', lookups))
+        lib_nav(WYLD_LIB, WYLD_LIBCODE, 'itemtype', lookups))
 
     locn_rows = [[r['name'], _clean_description(r['description'])]
                  for r in sorted(records['LOCN'], key=lambda r: r['name'])]
     _write_flat_report(
-        locn_rows, 'Location Policies', 'Location Policies',
+        locn_rows, 'Item Locations', 'Item Locations',
         os.path.join(output_root, 'location'), static_path,
-        lib_nav(WYLD_LIB, 'location', lookups))
+        lib_nav(WYLD_LIB, WYLD_LIBCODE, 'location', lookups))
 
     item_categories = {n: records[f'ICT{n}'] for n in range(1, 11)}
     _write_sectioned_report(
-        item_categories, 'Item Category', 'Item Category Policies', 'Item Category Policies',
+        item_categories, 'Item Category', 'Item Categories', 'Item Categories',
         os.path.join(output_root, 'itemcategory'), static_path,
-        lib_nav(WYLD_LIB, 'itemcategory', lookups))
+        lib_nav(WYLD_LIB, WYLD_LIBCODE, 'itemcategory', lookups))
 
     user_categories = {n: records[f'CAT{n}'] for n in range(1, 11)}
     _write_sectioned_report(
-        user_categories, 'User Category', 'User Category Policies', 'User Category Policies',
+        user_categories, 'User Category', 'User Categories', 'User Categories',
         os.path.join(output_root, 'usercategory'), static_path,
-        lib_nav(WYLD_LIB, 'usercategory', lookups))
+        lib_nav(WYLD_LIB, WYLD_LIBCODE, 'usercategory', lookups))

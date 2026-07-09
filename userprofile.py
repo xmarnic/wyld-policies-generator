@@ -86,6 +86,7 @@ def generate(records, lookups, output_root, static_path=None):
 
     for libr in records['LIBR']:
         lib = libr['lib']
+        libcode = libr['libcode']
         lib_name = libr['name']
         prefix = prefixes.get(lib)
 
@@ -99,7 +100,7 @@ def generate(records, lookups, output_root, static_path=None):
 
         rows = [_profile_row(u, locn_lookup) for u in relevant]
         heading = f'User Profiles for {lib_name}'
-        nav = lib_nav(lib, 'userprofile', lookups)
+        nav = lib_nav(lib, libcode, 'userprofile', lookups)
         body = f'<h2>{heading}</h2>\n{nav}\n{table(HEADERS, rows)}'
         html = page(f'{lib} User Profiles', body, today, static_path or '../static')
 

@@ -1,5 +1,7 @@
 """Shared HTML helpers used by all generators."""
 
+from policy_cards import available_cards
+
 STATIC_PATH = "/map/static"
 
 _CSS = """
@@ -118,22 +120,11 @@ h2 { font-size: 1.1rem; font-weight: 600; color: var(--brand); margin-bottom: .7
 """
 
 
-_LIB_NAV_PAGES = [
-    ('Circmap',     'Circ Map'),
-    ('Holdmap',     'Hold Map'),
-    ('Circrule',    'Circ Rules'),
-    ('userprofile', 'User Profiles'),
-]
-
-
-def lib_nav(lib, current_dir=None, lookups=None):
+def lib_nav(lib, libcode, current_dir=None, lookups=None):
     lib_lower = lib.lower()
-    libs_with_userprofile = (lookups or {}).get('libs_with_userprofile', set())
     links = [f'<a href="../Libindex/{lib_lower}.html">← {lib}</a>']
-    for directory, label in _LIB_NAV_PAGES:
+    for directory, label in available_cards(lib, libcode, lookups):
         if directory == current_dir:
-            continue
-        if directory == 'userprofile' and lib not in libs_with_userprofile:
             continue
         links.append(f'<a href="../{directory}/{lib_lower}.html">{label}</a>')
     return f'<div class="page-nav">{"".join(links)}</div>'

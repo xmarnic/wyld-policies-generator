@@ -72,7 +72,7 @@ def generate(records, lookups, output_root, static_path=None):
                 'Symphony reads from most specific to most general. Read this table from the bottom up.'
                 '</div>')
 
-        nav = lib_nav(lib, 'Circmap', lookups)
+        nav = lib_nav(lib, libcode, 'Circmap', lookups)
         body = f'<h2>{heading}</h2>\n{nav}\n{note}\n{table(HEADERS, all_rows)}'
         html = page(f'{lib} Circ Map', body, today, static_path or '../static')
 
