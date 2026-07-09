@@ -100,10 +100,10 @@ SCHEMAS = {
     'LOCN': {
         1: 'code',
         2: 'name',
-        3: 'available_flag',
-        5: 'holdable_flag',
+        3: 'holdable',
+        5: 'shadowed',
         6: 'description',
-        9: 'available_flag2',
+        9: 'available',
     },
     'LPRD': {
         1: 'code',

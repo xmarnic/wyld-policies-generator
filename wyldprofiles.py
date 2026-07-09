@@ -13,6 +13,7 @@ WYLD_LIB = 'WYLD'
 WYLD_LIBCODE = '115'
 
 REF_HEADERS = ['SHORT-CODE', 'DESCRIPTION']
+LOCN_HEADERS = REF_HEADERS + ['AVAILABLE', 'HOLDABLE', 'SHADOWED']
 
 _MSG_TOKEN_RE = re.compile(r'^\$<.*>$')
 
@@ -20,6 +21,10 @@ _MSG_TOKEN_RE = re.compile(r'^\$<.*>$')
 def _clean_description(description):
     """Blank out unresolved Symphony message-catalog tokens like $<LOCN_desc_checkedout>."""
     return '' if _MSG_TOKEN_RE.match(description) else description
+
+
+def _yesno(flag):
+    return 'Yes' if flag == '1' else 'No'
 
 
 def _write_profiles_page(uprfs, heading, title, out_dir, locn_lookup, static_path, nav=''):
@@ -34,11 +39,11 @@ def _write_profiles_page(uprfs, heading, title, out_dir, locn_lookup, static_pat
         f.write(html)
 
 
-def _write_flat_report(rows, heading, title, out_dir, static_path, nav=''):
+def _write_flat_report(rows, heading, title, out_dir, static_path, nav='', headers=REF_HEADERS):
     os.makedirs(out_dir, exist_ok=True)
     today = date.today().strftime('%B %-d, %Y')
 
-    body = f'<h2>{heading}</h2>\n{nav}{table(REF_HEADERS, rows)}'
+    body = f'<h2>{heading}</h2>\n{nav}{table(headers, rows)}'
     html = page(title, body, today, static_path or '../static')
 
     with open(os.path.join(out_dir, 'wyld.html'), 'w') as f:
@@ -92,12 +97,14 @@ def generate(records, lookups, output_root, static_path=None):
         os.path.join(output_root, 'itemtype'), static_path,
         lib_nav(WYLD_LIB, WYLD_LIBCODE, 'itemtype', lookups))
 
-    locn_rows = [[r['name'], _clean_description(r['description'])]
+    locn_rows = [[r['name'], _clean_description(r['description']),
+                  _yesno(r.get('available')), _yesno(r.get('holdable')), _yesno(r.get('shadowed'))]
                  for r in sorted(records['LOCN'], key=lambda r: r['name'])]
     _write_flat_report(
         locn_rows, 'Item Locations', 'Item Locations',
         os.path.join(output_root, 'location'), static_path,
-        lib_nav(WYLD_LIB, WYLD_LIBCODE, 'location', lookups))
+        lib_nav(WYLD_LIB, WYLD_LIBCODE, 'location', lookups),
+        headers=LOCN_HEADERS)
 
     item_categories = {n: records[f'ICT{n}'] for n in range(1, 11)}
     _write_sectioned_report(
