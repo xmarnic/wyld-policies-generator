@@ -16,16 +16,20 @@ DAYS = [
 WYLD_LIBCODE = '115'
 
 POLICY_CARDS = [
-    ('Circmap',     'Circ Map',       'Circulation rules by patron type and item type'),
-    ('Circrule',    'Circ Rules',     'Loan periods, fine structures, and renewal limits'),
-    ('Holdmap',     'Hold Map',       'Hold permissions and priority rules'),
-    ('Holdcode',    'Holding Codes',  'Item holding codes and locations'),
-    ('Defprice',    'Default Prices', 'Default replacement prices by item type'),
+    ('Circmap',     'Circ Map'),
+    ('Circrule',    'Circ Rules'),
+    ('Holdmap',     'Hold Map'),
+    ('Holdcode',    'Holding Codes'),
+    ('Defprice',    'Default Prices'),
 ]
 
-PROFILE_CARD = ('userprofile', 'User Profiles', 'Patron profile settings and borrowing limits')
-RECIRC_CARD = ('recircprofiles', 'Recirculating Profiles', 'User profiles flagged as recirculating')
-LIBRARY_USE_CARD = ('libraryuseprofiles', 'Library Use Profiles', 'User profiles that do not increment the charge counter')
+PROFILE_CARD = ('userprofile', 'User Profiles')
+RECIRC_CARD = ('recircprofiles', 'Recirculating Profiles')
+LIBRARY_USE_CARD = ('libraryuseprofiles', 'Library Use Profiles')
+ITEMTYPE_CARD = ('itemtype', 'Item Type Policies')
+LOCATION_CARD = ('location', 'Location Policies')
+ITEMCATEGORY_CARD = ('itemcategory', 'Item Category Policies')
+USERCATEGORY_CARD = ('usercategory', 'User Category Policies')
 
 HUB_CSS = """
 .info-table { margin-bottom: 1.5rem; }
@@ -62,7 +66,6 @@ HUB_CSS = """
   text-decoration: none;
 }
 .policy-card-title { font-weight: 700; font-size: .88rem; }
-.policy-card-desc  { font-size: .73rem; color: #6c757d; margin-top: .2rem; line-height: 1.3; }
 
 h3.section-label {
   font-size: .68rem;
@@ -115,10 +118,9 @@ def _info_row(label, value):
     return f'<tr><th>{label}</th><td>{value}</td></tr>'
 
 
-def _policy_card(directory, title, desc, lib_lower):
+def _policy_card(directory, title, lib_lower):
     return (f'<a href="../{directory}/{lib_lower}.html" class="policy-card">'
             f'<div class="policy-card-title">{title}</div>'
-            f'<div class="policy-card-desc">{desc}</div>'
             f'</a>')
 
 
@@ -152,18 +154,18 @@ def generate(records, lookups, output_root, static_path=None):
         ])
 
         cards = [
-            _policy_card(d, t, desc, lib_lower)
-            for d, t, desc in POLICY_CARDS
+            _policy_card(d, t, lib_lower)
+            for d, t in POLICY_CARDS
             if d != 'Holdcode' or libcode == WYLD_LIBCODE or libcode in libs_with_holdcodes
         ]
         if lib in prefixes:
-            d, t, desc = PROFILE_CARD
-            cards.append(_policy_card(d, t, desc, lib_lower))
+            d, t = PROFILE_CARD
+            cards.append(_policy_card(d, t, lib_lower))
         if libcode == WYLD_LIBCODE:
-            d, t, desc = RECIRC_CARD
-            cards.append(_policy_card(d, t, desc, lib_lower))
-            d, t, desc = LIBRARY_USE_CARD
-            cards.append(_policy_card(d, t, desc, lib_lower))
+            for card in (RECIRC_CARD, LIBRARY_USE_CARD, ITEMTYPE_CARD, LOCATION_CARD,
+                         ITEMCATEGORY_CARD, USERCATEGORY_CARD):
+                d, t = card
+                cards.append(_policy_card(d, t, lib_lower))
 
         body = (f'<h2>{lib_name}</h2>'
                 f'<table class="table table-sm info-table w-auto">'

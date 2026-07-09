@@ -1,12 +1,24 @@
-"""Generates WYLD-wide admin report pages derived from UPRF: all profiles,
-recirculating profiles, and library-use profiles."""
+"""Generates WYLD-wide admin report pages for record types that aren't
+library-scoped: UPRF-derived profile reports (all profiles, recirculating
+profiles, library-use profiles), and reference policy reports (item types,
+locations, item categories, user categories)."""
 
 import os
+import re
 from datetime import date
 from html_utils import page, table, lib_nav
 from userprofile import HEADERS, _profile_row
 
 WYLD_LIB = 'WYLD'
+
+REF_HEADERS = ['SHORT-CODE', 'DESCRIPTION']
+
+_MSG_TOKEN_RE = re.compile(r'^\$<.*>$')
+
+
+def _clean_description(description):
+    """Blank out unresolved Symphony message-catalog tokens like $<LOCN_desc_checkedout>."""
+    return '' if _MSG_TOKEN_RE.match(description) else description
 
 
 def _write_profiles_page(uprfs, heading, title, out_dir, locn_lookup, static_path, nav=''):
@@ -21,21 +33,79 @@ def _write_profiles_page(uprfs, heading, title, out_dir, locn_lookup, static_pat
         f.write(html)
 
 
+def _write_flat_report(rows, heading, title, out_dir, static_path, nav=''):
+    os.makedirs(out_dir, exist_ok=True)
+    today = date.today().strftime('%B %-d, %Y')
+
+    body = f'<h2>{heading}</h2>\n{nav}{table(REF_HEADERS, rows)}'
+    html = page(title, body, today, static_path or '../static')
+
+    with open(os.path.join(out_dir, 'wyld.html'), 'w') as f:
+        f.write(html)
+
+
+def _write_sectioned_report(records_by_number, label, heading, title, out_dir, static_path, nav=''):
+    os.makedirs(out_dir, exist_ok=True)
+    today = date.today().strftime('%B %-d, %Y')
+
+    sections = ''
+    for n in sorted(records_by_number):
+        recs = records_by_number[n]
+        if not recs:
+            continue
+        rows = [[r['name'], _clean_description(r['description'])] for r in sorted(recs, key=lambda r: r['name'])]
+        sections += f'<h3>{label} {n}</h3>\n{table(REF_HEADERS, rows)}\n'
+
+    body = f'<h2>{heading}</h2>\n{nav}{sections}'
+    html = page(title, body, today, static_path or '../static')
+
+    with open(os.path.join(out_dir, 'wyld.html'), 'w') as f:
+        f.write(html)
+
+
 def generate(records, lookups, output_root, static_path=None):
     locn_lookup = lookups['locn']
     all_uprfs = records['UPRF']
 
-    nav = lib_nav(WYLD_LIB, 'userprofile', lookups)
     _write_profiles_page(
         all_uprfs, 'All User Profiles', f'{WYLD_LIB} User Profiles',
-        os.path.join(output_root, 'userprofile'), locn_lookup, static_path, nav)
+        os.path.join(output_root, 'userprofile'), locn_lookup, static_path,
+        lib_nav(WYLD_LIB, 'userprofile', lookups))
 
     recirculating = [u for u in all_uprfs if u.get('recirculating') == 'Y']
     _write_profiles_page(
         recirculating, 'Recirculating User Profiles', 'Recirculating User Profiles',
-        os.path.join(output_root, 'recircprofiles'), locn_lookup, static_path)
+        os.path.join(output_root, 'recircprofiles'), locn_lookup, static_path,
+        lib_nav(WYLD_LIB, 'recircprofiles', lookups))
 
     library_use = [u for u in all_uprfs if u.get('increment_charge_counter') == '0']
     _write_profiles_page(
         library_use, 'Library Use User Profiles', 'Library Use User Profiles',
-        os.path.join(output_root, 'libraryuseprofiles'), locn_lookup, static_path)
+        os.path.join(output_root, 'libraryuseprofiles'), locn_lookup, static_path,
+        lib_nav(WYLD_LIB, 'libraryuseprofiles', lookups))
+
+    ityp_rows = [[r['name'], _clean_description(r['description'])]
+                 for r in sorted(records['ITYP'], key=lambda r: r['name'])]
+    _write_flat_report(
+        ityp_rows, 'Item Type Policies', 'Item Type Policies',
+        os.path.join(output_root, 'itemtype'), static_path,
+        lib_nav(WYLD_LIB, 'itemtype', lookups))
+
+    locn_rows = [[r['name'], _clean_description(r['description'])]
+                 for r in sorted(records['LOCN'], key=lambda r: r['name'])]
+    _write_flat_report(
+        locn_rows, 'Location Policies', 'Location Policies',
+        os.path.join(output_root, 'location'), static_path,
+        lib_nav(WYLD_LIB, 'location', lookups))
+
+    item_categories = {n: records[f'ICT{n}'] for n in range(1, 11)}
+    _write_sectioned_report(
+        item_categories, 'Item Category', 'Item Category Policies', 'Item Category Policies',
+        os.path.join(output_root, 'itemcategory'), static_path,
+        lib_nav(WYLD_LIB, 'itemcategory', lookups))
+
+    user_categories = {n: records[f'CAT{n}'] for n in range(1, 11)}
+    _write_sectioned_report(
+        user_categories, 'User Category', 'User Category Policies', 'User Category Policies',
+        os.path.join(output_root, 'usercategory'), static_path,
+        lib_nav(WYLD_LIB, 'usercategory', lookups))

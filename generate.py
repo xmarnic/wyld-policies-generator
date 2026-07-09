@@ -5,7 +5,7 @@ import os
 import sys
 from datetime import datetime
 
-from policy_parser import parse_policies, parse_libg, build_lookup, POLICIES_FILE
+from policy_parser import parse_policies, parse_libg, parse_aux_file, build_lookup, POLICIES_FILE
 import circmap
 import circrule
 import defprice
@@ -39,6 +39,15 @@ def main(policies_path=POLICIES_FILE, output_root=OUTPUT_ROOT, local=False):
     lookups = build_lookups(records)
     libg_path = os.path.join(os.path.dirname(policies_path), 'libg.pol')
     lookups['libg'] = parse_libg(libg_path)
+
+    ictx_path = os.path.join(os.path.dirname(policies_path), 'ictx.pol')
+    ucat_path = os.path.join(os.path.dirname(policies_path), 'ucat.pol')
+    ict_extra = parse_aux_file(ictx_path, [f'ICT{n}' for n in range(6, 11)])
+    ucat = parse_aux_file(ucat_path, [f'CAT{n}' for n in range(1, 11)])
+    for n in range(6, 11):
+        records[f'ICT{n}'] = ict_extra[f'ICT{n}']
+    for n in range(1, 11):
+        records[f'CAT{n}'] = ucat[f'CAT{n}']
 
     lookups['libs_with_userprofile'] = userprofile.libs_with_userprofile(records)
 

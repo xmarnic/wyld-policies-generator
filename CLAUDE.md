@@ -12,6 +12,8 @@ python3 -m http.server 8080 --directory /tmp/wyld-test --bind 0.0.0.0
 
 There are no tests and no linter configured. The `policies` file in the repo root is a mock snapshot used for local development.
 
+`generate.py` also reads two sibling files in the same directory as `policies` (mocked in `mock-data/`): `ictx.pol` (item categories `ICT6`-`ICT10`, since `ICT1`-`ICT5` live in the main `policies` file) and `ucat.pol` (all of user categories `CAT1`-`CAT10`, no split across files). Both are parsed via `policy_parser.parse_aux_file(path, record_types)` and merged into `records` in `generate.py` before any generator runs.
+
 ## Architecture
 
 `generate.py` is the entry point. It parses the policies file once via `policy_parser.py`, builds shared lookup dicts, then calls each generator module in sequence. All generators receive the same `records` and `lookups` dicts and write independently to the output directory.
@@ -30,6 +32,8 @@ There are no tests and no linter configured. The `policies` file in the repo roo
 
 **WYLD-only admin reports (`wyldprofiles.py`):**
 Some data isn't meaningfully per-library — e.g. UPRF's `recirculating` and `increment_charge_counter` flags are profile-wide, not library-scoped. `wyldprofiles.py` generates these as single global pages (`userprofile/wyld.html`, `recircprofiles/wyld.html`, `libraryuseprofiles/wyld.html`), reusing `HEADERS`/`_profile_row` from `userprofile.py` rather than duplicating the table rendering. Their cards are added in `libindex.py`'s `generate()` only when `libcode == WYLD_LIBCODE`. Note `userprofile.py` itself no longer generates the "all profiles" page for WYLD (that special case was moved into `wyldprofiles.py`) — its per-library loop skips any `lib` whose `uprf_library_prefixes.json` prefix is `"all"`.
+
+`wyldprofiles.py` also generates four reference policy reports the same way: `itemtype/wyld.html` and `location/wyld.html` (flat two-column tables from `records['ITYP']`/`records['LOCN']`), and `itemcategory/wyld.html`/`usercategory/wyld.html` (one table per `ICT1`-`ICT10`/`CAT1`-`CAT10`, sections with no records silently skipped). All four `SCHEMAS` entries share the layout `{1: 'code', 2: 'name', 3: 'description'}`.
 
 **Shared rendering:**
 - `html_utils.py` — `page()` wraps a body string in the full HTML shell with header/nav/styles; `table()` renders a list of rows into a Bootstrap table; `lib_nav()` builds the per-page nav strip.

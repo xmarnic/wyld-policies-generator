@@ -136,6 +136,13 @@ SCHEMAS = {
     },
 }
 
+# Item category (ICT1-ICT10) and user category (CAT1-CAT10) records all
+# share the same simple layout: code, short-code/name, description.
+for _n in range(1, 11):
+    SCHEMAS[f'ICT{_n}'] = {1: 'code', 2: 'name', 3: 'description'}
+    SCHEMAS[f'CAT{_n}'] = {1: 'code', 2: 'name', 3: 'description'}
+del _n
+
 # Fields whose values are comma-separated lists of codes.
 COMMA_FIELDS = {
     'CMAP': {'library_codes', 'patron_profile_codes', 'item_type_codes'},
@@ -193,6 +200,23 @@ def parse_libg(path=LIBG_FILE):
             if fields[0] == 'LIBG' and len(fields) > 2:
                 libg[fields[1]] = fields[2]
     return libg
+
+
+def parse_aux_file(path, record_types):
+    """Parse a policies-formatted sibling file, keeping only record_types.
+
+    Like parse_policies, but for auxiliary files (e.g. ictx.pol, ucat.pol)
+    that live alongside the main policies file and aren't read by it.
+    """
+    records = {rtype: [] for rtype in record_types}
+    with open(path, 'r') as f:
+        for line in f:
+            fields = line.rstrip('\n').split('|')
+            record_type = fields[0]
+            if record_type not in record_types:
+                continue
+            records[record_type].append(_fields_to_record(record_type, fields))
+    return records
 
 
 if __name__ == "__main__":
