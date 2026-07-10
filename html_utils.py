@@ -137,6 +137,11 @@ def page(title, body, date, static_path=STATIC_PATH):
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
+  <link rel="icon" type="image/x-icon" href="{static_path}/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="{static_path}/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{static_path}/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="{static_path}/apple-touch-icon.png">
+  <link rel="manifest" href="{static_path}/site.webmanifest">
   <link rel="stylesheet" href="{static_path}/bootstrap.min.css">
   <style>@font-face {{
   font-family: 'Geist';

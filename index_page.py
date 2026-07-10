@@ -142,6 +142,11 @@ def generate(records, lookups, output_root, static_path=None):
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>WYLD Policy Map</title>
+  <link rel="icon" type="image/x-icon" href="{sp}/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="{sp}/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{sp}/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="{sp}/apple-touch-icon.png">
+  <link rel="manifest" href="{sp}/site.webmanifest">
   <link rel="stylesheet" href="{sp}/bootstrap.min.css">
   <style>@font-face {{
   font-family: 'Geist';
